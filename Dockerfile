@@ -33,7 +33,11 @@ RUN pnpm install --frozen-lockfile
 
 # Build the app.
 # The build script in the ssr package.json handles building the web app first.
-RUN pnpm --filter=@afilmory/ssr build
+RUN set -a \
+    && . ./.env \
+    && set +a \
+    && export PG_CONNECTION_STRING="${PG_CONNECTION_STRING:-postgresql://build:build@127.0.0.1:5432/build}" \
+    && pnpm --filter=@afilmory/ssr build
 
 # -----------------
 # Runner stage
@@ -43,6 +47,7 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV PG_CONNECTION_STRING=postgresql://build:build@127.0.0.1:5432/build
 # ENV PORT and other configurations are now in the config files
 # and passed through environment variables during runtime.
 RUN apk add --no-cache curl wget
