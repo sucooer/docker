@@ -27,7 +27,7 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - "3020:3000"
+      - "3000:3000"
     env_file:
       - .env
     environment:
