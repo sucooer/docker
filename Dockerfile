@@ -17,10 +17,11 @@ FROM base AS builder
 
 RUN apk update && apk add --no-cache git perl
 
-RUN git clone https://github.com/Afilmory/Afilmory --depth 1 .
-COPY config.json ./
-COPY builder.config.ts ./
-COPY .env ./
+# Clone Afilmory source from hf-test branch
+RUN git clone --branch hf-test --depth 1 https://github.com/sucooer/afilmory.git /app
+COPY config.json /app/
+COPY builder.config.ts /app/
+COPY .env /app/
 
 ARG S3_ACCESS_KEY_ID
 ARG S3_SECRET_ACCESS_KEY
